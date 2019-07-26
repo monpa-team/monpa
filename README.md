@@ -1,10 +1,10 @@
 # 罔拍 MONPA: Multi-Objective NER POS Annotator
 
-MONPA（罔拍）是一個提供正體中文分詞及 POS, NE 標註的模型。初期只有網站版本（<http://monpa.iis.sinica.edu.tw:9000/chunk>），本計劃將把 monpa 包裝成可以 pip install 的 python package。
+MONPA（罔拍）是一個提供正體中文分詞及 POS, NE 標註的模型。初期只有使用原始模型（v0.1）的網站版本（<http://monpa.iis.sinica.edu.tw:9000/chunk>），本計劃將把新版 monpa (v0.2) 包裝成可以 pip install 的 python package。(*提醒：因網站版為 v0.1，與 python 套件版 v0.2 以上的分詞結果可能不同。*)
 
-最新版的 monpa model 是使用 (py)torch 1.0 框架訓練出來的模型，所以在使用本版本前，請先安裝 torch 1.* 以上版本才能正常使用 monpa 套件。
+最新版的 monpa model 是使用 pytorch 1.0 框架訓練出來的模型，所以在使用本版本前，請先安裝 torch 1.* 以上版本才能正常使用 monpa 套件。
 
-<span style="color:red"> **注意：** </span>
+**注意：**
 
 1. 建議以原文輸入 monpa 完成切詞後，再視需求濾掉停留字（stopword）及標點符號（punctuation）。
 2. 每次輸入予 monpa 做切詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適斷句後再應用 monpa 切詞。
@@ -21,25 +21,21 @@ pip install monpa
 
 ## 使用 monpa 的簡單範例
 
-Mac OS X, Linux 及 Windows 都相同，先啟動 jupyter。
+引入 monpa 的 python package。
 
-```bash
-jupyter notebook
-```
-
-再來就是你熟知的 jupyter notebook 介面，開啟一個 python kernel notebook，並引入 monpa package。
-
-**注意：因應 pip 安裝的檔案大小限制，所以在第一次 import monpa 時將下載 model 檔，約 200 MB。**
+**注意：因應 pip 安裝的檔案大小限制，所以在第一次 import monpa 時將下載 model 檔，約 200 MB (實際大小：216681674 KB)。採分次下載，請務必等待下載完成。**
 
 ```python
 import monpa
 ```
 
-沒有錯誤訊息，就是好消息。
+等看到```#已完成 monpa model 下載，歡迎使用。Download completed.```提示才表示下載完成。
+
+如果下載不完整的 model 檔，請到 monpa package 的安裝資料夾刪除 model-511.pt 檔案，並再次執行 import monpa 來啟動下載程序。(相關討論與解法集中於 [Issue 1](https://github.com/monpa-team/monpa/issues/1))
 
 ### cut function
 
-若只需要中文分詞結果，請用 cut function，回傳值是 list 格式。簡單範例如下：
+若只需要中文分詞結果，請用 ```cut``` function，回傳值是 list 格式。簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -70,7 +66,7 @@ for t in result:
 
 ### pseg function
 
-若需要中文分詞及其 POS 結果，請用 pseg function，回傳值是 list of list 格式，簡單範例如下：
+若需要中文分詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of list 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -112,15 +108,15 @@ for t in result:
 受邀 100 V
 ```
 
-當要使用自訂詞時，請於執行分詞前先做 load_userdict，將自訂詞典載入到 monpa 模組。
+當要使用自訂詞時，請於執行分詞前先做 ```load_userdict```，將自訂詞典載入到 monpa 模組。
 
-請將本範例的 『 ./userdict.txt 』改成實際放置自訂詞文字檔路徑及檔名。
+請將本範例的 ```./userdict.txt``` 改成實際放置自訂詞文字檔路徑及檔名。
 
 ```python
 monpa.load_userdict("./userdict.txt")
 ```
 
-延用前例，用 pseg function，可發現回傳值已依自訂詞典分詞，譬如『受邀』為一個詞而非先前的兩字分列輸出，『台北市政府』也依自訂詞輸出。
+延用前例，用 ```pseg``` function，可發現回傳值已依自訂詞典分詞，譬如『受邀』為一個詞而非先前的兩字分列輸出，『台北市政府』也依自訂詞輸出。
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
