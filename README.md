@@ -7,7 +7,7 @@ MONPA（罔拍）是一個提供正體中文分詞及 POS, NE 標註的模型。
 **注意：**
 
 1. 建議以原文輸入 monpa 完成切詞後，再視需求濾掉停留字（stopword）及標點符號（punctuation）。
-2. 每次輸入予 monpa 做切詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適斷句後再應用 monpa 切詞。
+2. 每次輸入予 monpa 做切詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適斷句後再應用 monpa 切詞。（可參考 wiki [如何將長文切成短句再用 monpa 切詞？](/monpa-team/monpa/wiki/Example-1：將長句處理成短句再運用-monpa-完成分詞)）
 3. 支援 python >= 3.6，不支援 python 2.x。
 
 ## 安裝 monpa 套件
