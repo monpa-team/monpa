@@ -1,13 +1,13 @@
 # 罔拍 MONPA: Multi-Objective NER POS Annotator
 
-MONPA 罔拍是一個提供正體中文分詞、詞性標註以及命名實體辨識的多任務模型。初期只有使用原始模型（v0.1）的網站版本（<http://monpa.iis.sinica.edu.tw:9000/chunk>），本計劃將把新版 monpa (v0.2) 包裝成可以 pip install 的 python package。(*提醒：因網站版為 v0.1，與 python 套件版 v0.2 以上的分詞結果可能不同。*)
+MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體辨識的多任務模型。初期只有使用原始模型（v0.1）的網站版本（<http://monpa.iis.sinica.edu.tw:9000/chunk>），本計劃將把新版 monpa (v0.2) 包裝成可以 pip install 的 python package。(*提醒：因網站版為 v0.1，與 python 套件版 v0.2 以上的斷詞結果可能不同。*)
 
 最新版的 monpa model 是使用 pytorch 1.0 框架訓練出來的模型，所以在使用本版本前，請先安裝 torch 1.* 以上版本才能正常使用 monpa 套件。
 
 **注意：**
 
-1. 建議以原文輸入 monpa 完成切詞後，再視需求濾掉停留字（stopword）及標點符號（punctuation）。
-2. 每次輸入予 monpa 做切詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適斷句後再應用 monpa 切詞。可參考 wiki [如何將長文切成短句再用 monpa 切詞？](https://github.com/monpa-team/monpa/wiki/Example-1：將長句處理成短句再運用-monpa-完成分詞)）
+1. 建議以原文輸入 monpa 完成斷詞後，再視需求濾掉停留字（stopword）及標點符號（punctuation）。
+2. 每次輸入予 monpa 做斷詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適長度分句後再應用 monpa 斷詞。可參考 wiki [如何將長文切成短句再用 monpa 斷詞？](https://github.com/monpa-team/monpa/wiki/Example-1：將長句處理成短句再運用-monpa-完成分詞)）
 3. 支援 python >= 3.6，不支援 python 2.x。
 
 ## 安裝 monpa 套件
@@ -36,7 +36,7 @@ import monpa
 
 ### cut function
 
-若只需要中文分詞結果，請用 ```cut``` function，回傳值是 list 格式。簡單範例如下：
+若只需要中文斷詞結果，請用 ```cut``` function，回傳值是 list 格式。簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -67,7 +67,7 @@ for t in result:
 
 ### pseg function
 
-若需要中文分詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of list 格式，簡單範例如下：
+若需要中文斷詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of list 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -109,7 +109,7 @@ for t in result:
 受邀 100 V
 ```
 
-當要使用自訂詞時，請於執行分詞前先做 ```load_userdict```，將自訂詞典載入到 monpa 模組。
+當要使用自訂詞時，請於執行斷詞前先做 ```load_userdict```，將自訂詞典載入到 monpa 模組。
 
 請將本範例的 ```./userdict.txt``` 改成實際放置自訂詞文字檔路徑及檔名。
 
@@ -117,7 +117,7 @@ for t in result:
 monpa.load_userdict("./userdict.txt")
 ```
 
-延用前例，用 ```pseg``` function，可發現回傳值已依自訂詞典分詞，譬如『受邀』為一個詞而非先前的兩字分列輸出，『台北市政府』也依自訂詞輸出。
+延用前例，用 ```pseg``` function，可發現回傳值已依自訂詞典斷詞，譬如『受邀』為一個詞而非先前的兩字分列輸出，『台北市政府』也依自訂詞輸出。
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
