@@ -6,9 +6,13 @@ MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體�
 
 ## 公告
 ```diff
-- 茲因部分訓練語料標註結果之授權範圍待釐清，故暫停 monpa 模型檔下載。
-- pip install monpa 將只安裝 python 套件，執行後將不再自動下載模型檔。 
-- MONPA 僅供學術使用。已下載使用，請勿再散播或使用於商業用途。
+- 因應模型開發初期使用中央研究院中文詞知識庫小組開發之 CKIP 程式進行部分語料標註工作，後再經其他程序完成標註校正。感謝中央研究院中文詞知識庫小組的協助，並經其同意下，使用 CKIP 斷詞元件輔助製作初期訓練資料。
+
+- MONPA v0.2 版本是基於 BERT（應用雙向 Transformer）模型來取得更強健的詞向量（word embeddings）並配合CRF同時進行斷詞、詞性標註、及NER等多個目標。已與 MONPA v0.1 版本有相當大差異，訓練語料亦與所附早期論文不同。
+
+- 公開釋出的 MONPA 僅供學術使用，請勿使用於商業用途。
+
+- 請重新下載更新版本 v0.2.6.x 以取得新的模型檔 model-830.pt
 ```
 **注意：**
 
@@ -38,7 +42,7 @@ import monpa
 
 等看到```#已完成 monpa model 下載，歡迎使用。Download completed.```提示才表示下載完成。
 
-如果下載不完整的 model 檔，請到 monpa package 的安裝資料夾刪除 model-511.pt 檔案，並再次執行 import monpa 來啟動下載程序。(相關討論與解法集中於 [Issue 1](https://github.com/monpa-team/monpa/issues/1))
+如果下載不完整的 model 檔，請到 monpa package 的安裝資料夾刪除 model-830.pt 檔案，並再次執行 import monpa 來啟動下載程序。(相關討論與解法集中於 [Issue 1](https://github.com/monpa-team/monpa/issues/1))
 
 ### cut function
 
@@ -153,7 +157,9 @@ for t in result:
 
 ## 其他
 
-See our paper [MONPA: Multi-objective Named-entity and Part-of-speech Annotator for Chinese using Recurrent Neural Network](https://www.aclweb.org/anthology/papers/I/I17/I17-2014/) for more information about the model detail.
+See our paper [MONPA: Multi-objective Named-entity and Part-of-speech Annotator for Chinese using Recurrent Neural Network](https://www.aclweb.org/anthology/papers/I/I17/I17-2014/) for more information about the model detail. 
+
+For your reference, although we list the paper here, it does NOT mean we use the exact same corpora when training the released model. As we have mentioned before, the current MONPA is a new development by adopating the BERT model and a new paper will be published later. In the meantime, we list the original paper about the core ideas of MONPA for citation purposes.
 
 ##### Abstract
 
@@ -190,3 +196,17 @@ Hsieh, Y. L., Chang, Y. C., Huang, Y. J., Yeh, S. H., Chen, C. H., & Hsu, W. L. 
 ##### Contact
 Please feel free to contact monpa team by email.
 monpacut@gmail.com
+
+## 致謝
+
+感謝中央研究院中文詞知識庫小組的協助。MONPA 於經中央研究院中文詞知識庫小組同意下，使用 CKIP 斷詞元件輔助製作初期訓練資料。
+
+Ma, Wei-Yun and Keh-Jiann Chen, 2003, "Introduction to CKIP Chinese Word Segmentation System for the First International Chinese Word Segmentation Bakeoff", Proceedings of ACL, Second SIGHAN Workshop on Chinese Language Processing, pp168-171.。
+
+## License
+
+[![CC BY-NC-SA 4.0](https://camo.githubusercontent.com/6887feb0136db5156c4f4146e3dd2681d06d9c75/68747470733a2f2f692e6372656174697665636f6d6d6f6e732e6f72672f6c2f62792d6e632d73612f342e302f38387833312e706e67)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Copyright (c) 2019 The MONPA team under the [CC-BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/). All rights reserved.
+
+僅供學術使用，請勿使用於營利目的。若您需要應用 MONPA 於商業用途，請聯繫我們協助後續事宜。（monpacut@gmail.com）
