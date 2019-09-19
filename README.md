@@ -77,7 +77,7 @@ for t in result:
 
 ### pseg function
 
-若需要中文斷詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of list 格式，簡單範例如下：
+若需要中文斷詞及其 POS 結果（參考 wiki [POS and NER 列表](https://github.com/monpa-team/monpa/wiki/POS-and-NER-Tagging)），請用 ```pseg``` function，回傳值是 list of list 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
