@@ -1,4 +1,8 @@
-**monpa v0.2.5.1**
+**monpa v0.2.6**
+- LICENSE revision to [CC-BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+- release new model file, model-830.pt  
+
+monpa v0.2.5.1
 - force incomplete sentence can be output word and pos without error message. ex.『隔離百分之』can be output as [['隔離', 'VC'], ['百分之', 'Neqa']], although "百分之" is incomplete.
 - fix load_userdict function to avoid output dubplicate user define terms.
 - fintune some wording. 
