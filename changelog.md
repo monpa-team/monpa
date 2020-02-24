@@ -1,4 +1,9 @@
-**monpa v0.2.6**
+**monpa v0.3.0.0**
+- change model structure to reduce file size and increase speed
+- no need to download model file
+- enable userdict weight-value setting
+
+monpa v0.2.6
 - LICENSE revision to [CC-BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 - release new model file, model-830.pt  
 
