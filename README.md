@@ -10,9 +10,9 @@ MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體�
 - 公開釋出的 MONPA 僅供學術使用，請勿使用於商業用途。本團隊亦提供針對專業領域客製模型之服務，歡迎聯絡我們。
 ```
 
-MONPA v0.2+ 版本是基於 BERT（雙向 Transformer）[1](1)模型來取得更強健的詞向量（word embeddings）並配合 CRF 同時進行斷詞、詞性標註、及 NER 等多個目標。已與 MONPA v0.1 版本有相當大差異，訓練語料亦與論文內容不同。
+MONPA v0.2+ 版本是基於 BERT（雙向 Transformer）[[1]](#1)模型來取得更強健的詞向量（word embeddings）並配合 CRF 同時進行斷詞、詞性標註、及 NER 等多個目標。已與 MONPA v0.1 版本有相當大差異，訓練語料亦與論文內容不同。
 
-MONPA v0.3 版本基於 ALBERT [2](2) 重新訓練，大幅降低模型檔的大小，並加快執行效率。
+MONPA v0.3 版本基於 ALBERT [[2]](#2) 重新訓練，大幅降低模型檔的大小，並加快執行效率。
 
 <a id="1">[1]</a>  BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova, NAACL-HLT 2019.
