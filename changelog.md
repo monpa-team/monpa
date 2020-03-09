@@ -1,4 +1,7 @@
-**monpa v0.3.0.0**
+**monpa v0.3.1**
+- Add "cut_batch" and "pseg_batch" method to support batch segmentation by using GPU computing.
+  
+monpa v0.3.0.0
 - change model structure to reduce file size and increase speed
 - no need to download model file
 - enable userdict weight-value setting
