@@ -1,18 +1,19 @@
-  # 罔拍 MONPA: Multi-Objective NER POS Annotator
+# 罔拍 MONPA: Multi-Objective NER POS Annotator
 
-MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體辨識的多任務模型。初期只有使用原始模型（v0.1）的網站版本（<http://nlp.tmu.edu.tw:8080/chunk>），本計劃將 monpa (v0.2+) 包裝成可以 pip install 的 python package。(*提醒：因網站版為 v0.1，與 python 套件版 v0.2 以上的斷詞結果可能不同。*)
+MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體辨識的多任務模型。初期只有網站示範版本（<http://nlp.tmu.edu.tw:8080/chunk>），本計劃是將 monpa 包裝成可以 pip install 的 python package (最新版本 v0.3.1)。
 
 最新版的 monpa model 是使用 pytorch 1.0 框架訓練出來的模型，所以在使用本版本前，請先安裝 torch 1.* 以上版本才能正常使用 monpa 套件。
 
 ## 公告
 ```diff
-- 更新版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
+- 更新版本 v0.3.1：新增運用 GPU 的批次斷詞功能 cut_batch 及 pseg_batch。
+- 前一版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
 - 公開釋出的 MONPA 僅供學術使用，請勿使用於商業用途。本團隊亦提供針對專業領域客製模型之服務，歡迎聯絡我們。
 ```
 
 MONPA v0.2+ 版本是基於 BERT（雙向 Transformer）[[1]](#1)模型來取得更強健的詞向量（word embeddings）並配合 CRF 同時進行斷詞、詞性標註、及 NER 等多個目標。已與 MONPA v0.1 版本有相當大差異，訓練語料亦與論文內容不同。
 
-MONPA v0.3 版本基於 ALBERT [[2]](#2) 重新訓練，大幅降低模型檔的大小，並加快執行效率。
+MONPA v0.3+ 版本基於 ALBERT [[2]](#2) 重新訓練，大幅降低模型檔的大小，並加快執行效率。
 
 <a id="1">[1]</a>  BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova, NAACL-HLT 2019.
@@ -22,9 +23,12 @@ Zhenzhong Lan, Mingda Chen, Sebastian Goodman, Kevin Gimpel, Piyush Sharma, Radu
 
 **開發正體中文自然語言斷詞套件是一個基礎，接續的研究需要多方支持，歡迎[您的捐款](http://nlp.tmu.edu.tw/Donate/index.html)。**
 
-monpa v0.2 與新版 v0.3 斷詞效率比較圖
+monpa 各版本的斷詞效率比較圖
 
 <img src="./monpa_2vs3.png" style="zoom:24%;" />
+
+以上於 Google Colab 環境測試(monpa.cut 皆使用 CPU，monpa.cut_batch 使用 GPU)
+
 
 **注意**
 
@@ -34,7 +38,7 @@ monpa v0.2 與新版 v0.3 斷詞效率比較圖
 
 ## 安裝 monpa 套件
 
-monpa 已經支援直接使用 pip 指令安裝，各作業系統的安裝步驟都相同。
+monpa 已經支援使用 pip 指令安裝，各作業系統的安裝步驟都相同。
 
 ```bash
 pip install monpa
@@ -52,16 +56,16 @@ pip install monpa
 import monpa
 ```
 
-### cut function
+### cut method
 
-若只需要中文斷詞結果，請用 ```cut``` function，回傳值是 list 格式。簡單範例如下：
+若只需要中文斷詞結果，請用 ```cut``` method，回傳值是 list 格式。簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
-result = monpa.cut(sentence)
+result_cut = monpa.cut(sentence)
 
-for t in result:
-  print(t)
+for item in result_cut:
+    print(item)
 ```
 
 輸出
@@ -83,16 +87,16 @@ for t in result:
 。
 ```
 
-### pseg function
+### pseg method
 
-若需要中文斷詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of tuple 格式，簡單範例如下：
+若需要中文斷詞及其 POS 結果，請用 ```pseg``` method，回傳值是 list of tuple 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
-result = monpa.pseg(sentence)
+result_pseg = monpa.pseg(sentence)
 
-for t in result:
-    print(t)
+for item in result_pseg:
+    print(item)
 ```
 
 輸出
@@ -114,7 +118,7 @@ for t in result:
 ('。', 'PERIODCATEGORY')
 ```
 
-### 載入自訂詞典 load_userdict function
+### 載入自訂詞典 load_userdict method
 
 如果需要自訂詞典，請依下列格式製作詞典文字檔，再使用此功能載入。簡單範例如下：
 
@@ -135,14 +139,14 @@ for t in result:
 monpa.load_userdict("./userdict.txt")
 ```
 
-延用前例，用 ```pseg``` function，可發現回傳值已依自訂詞典斷詞，譬如「受邀」為一個詞而非先前的兩字分列輸出，「台北市政府」也依自訂詞輸出。
+延用前例，用 ```pseg``` method，可發現回傳值已依自訂詞典斷詞，譬如「受邀」為一個詞而非先前的兩字分列輸出，「台北市政府」也依自訂詞輸出。
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
-result = monpa.pseg(sentence)
+result_pseg_userdict = monpa.pseg(sentence)
 
-for t in result:
-    print(t)
+for item in result_pseg_userdict:
+    print(item)
 ```
 
 輸出
@@ -161,6 +165,55 @@ for t in result:
 ('馬拉松', 'Na')
 ('比賽', 'Na')
 ('。', 'PERIODCATEGORY')
+```
+### cut_batch method
+
+開始批次斷句前，請先啟動使用 GPU 之設定。
+
+```python
+monpa.use_gpu(True)
+```
+
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```cut_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```cut``` method 即可。簡單範例如下：
+
+```python
+sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
+result_cut_batch = monpa.cut_batch(sentence_list)
+
+for item in result_cut_batch:
+    print(item)
+```
+
+輸出
+
+```python
+['蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。']
+['蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。']
+```
+
+### pseg_batch method
+
+開始批次斷句前，請先啟動使用 GPU 之設定。
+
+```python
+monpa.use_gpu(True)
+```
+
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of turple 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` method 即可。簡單範例如下：
+
+```python
+sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
+result_pseg_batch = monpa.pseg_batch(sentence_list)
+
+for item in result_pseg_batch:
+    print(item)
+```
+
+輸出
+
+```python
+[('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY')]
+[('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY')]
 ```
 
 ## 捐款
@@ -207,7 +260,7 @@ Hsieh, Y. L., Chang, Y. C., Huang, Y. J., Yeh, S. H., Chen, C. H., & Hsu, W. L. 
 
 ##### Contact
 Please feel free to contact monpa team by email.
-monpacut@gmail.com
+monpa.cut@gmail.com
 
 ## 致謝
 
@@ -221,4 +274,4 @@ Ma, Wei-Yun and Keh-Jiann Chen, 2003, "Introduction to CKIP Chinese Word Segment
 
 Copyright (c) 2020 The MONPA team under the [CC-BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/). All rights reserved.
 
-僅供學術使用，請勿使用於營利目的。若您需要應用 MONPA 於商業用途，請聯繫我們協助後續事宜。（monpacut@gmail.com）
+僅供學術使用，請勿使用於營利目的。若您需要應用 MONPA 於商業用途，請聯繫我們協助後續事宜。（monpa.cut@gmail.com）
