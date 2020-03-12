@@ -89,7 +89,7 @@ for item in result_cut:
 
 ### pseg method
 
-若需要中文斷詞及其 POS 結果，請用 ```pseg``` method，回傳值是 list of tuple 格式，簡單範例如下：
+若需要中文斷詞及其 POS 結果，請用 ```pseg``` method，回傳值是 list of tuples 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -199,7 +199,7 @@ for item in result_cut_batch:
 monpa.use_gpu(True)
 ```
 
-從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of turple 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` method 即可。簡單範例如下：
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of tuples 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` method 即可。簡單範例如下：
 
 ```python
 sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
