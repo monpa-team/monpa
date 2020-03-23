@@ -56,9 +56,9 @@ pip install monpa
 import monpa
 ```
 
-### cut method
+### cut function
 
-若只需要中文斷詞結果，請用 ```cut``` method，回傳值是 list 格式。簡單範例如下：
+若只需要中文斷詞結果，請用 ```cut``` function，回傳值是 list 格式。簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -87,9 +87,9 @@ for item in result_cut:
 。
 ```
 
-### pseg method
+### pseg function
 
-若需要中文斷詞及其 POS 結果，請用 ```pseg``` method，回傳值是 list of tuples 格式，簡單範例如下：
+若需要中文斷詞及其 POS 結果，請用 ```pseg``` function，回傳值是 list of tuples 格式，簡單範例如下：
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -118,7 +118,7 @@ for item in result_pseg:
 ('。', 'PERIODCATEGORY')
 ```
 
-### 載入自訂詞典 load_userdict method
+### 載入自訂詞典 load_userdict function
 
 如果需要自訂詞典，請依下列格式製作詞典文字檔，再使用此功能載入。簡單範例如下：
 
@@ -139,7 +139,7 @@ for item in result_pseg:
 monpa.load_userdict("./userdict.txt")
 ```
 
-延用前例，用 ```pseg``` method，可發現回傳值已依自訂詞典斷詞，譬如「受邀」為一個詞而非先前的兩字分列輸出，「台北市政府」也依自訂詞輸出。
+延用前例，用 ```pseg``` function，可發現回傳值已依自訂詞典斷詞，譬如「受邀」為一個詞而非先前的兩字分列輸出，「台北市政府」也依自訂詞輸出。
 
 ```python
 sentence = "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"
@@ -166,7 +166,7 @@ for item in result_pseg_userdict:
 ('比賽', 'Na')
 ('。', 'PERIODCATEGORY')
 ```
-### cut_batch method
+### cut_batch function
 
 開始批次斷句前，請先啟動使用 GPU 之設定。
 
@@ -174,7 +174,7 @@ for item in result_pseg_userdict:
 monpa.use_gpu(True)
 ```
 
-從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```cut_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```cut``` method 即可。簡單範例如下：
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```cut_batch``` function，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```cut``` function 即可。簡單範例如下：
 
 ```python
 sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
@@ -191,7 +191,7 @@ for item in result_cut_batch:
 ['蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。']
 ```
 
-### pseg_batch method
+### pseg_batch function
 
 開始批次斷句前，請先啟動使用 GPU 之設定。
 
@@ -199,7 +199,7 @@ for item in result_cut_batch:
 monpa.use_gpu(True)
 ```
 
-從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` method，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of tuples 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` method 即可。簡單範例如下：
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` function，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of tuples 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` function 即可。簡單範例如下：
 
 ```python
 sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
