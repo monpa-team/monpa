@@ -246,7 +246,10 @@ def load_userdict(pathtofile):
     # empty previous userdict
     _userdict = []
     for input_item in io.open(pathtofile, 'r', encoding="utf-8").read().split("\n"):
-        _userdict.append(input_item.split(" "))
+        item = input_item.split(" ")
+        if len(item[0].strip()) == 0:
+            continue
+        _userdict.append(item)
 
 def findall(p, s):
     ''' Yields all the positions of the pattern p in the string s
