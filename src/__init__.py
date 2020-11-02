@@ -47,8 +47,8 @@ path_model = os.path.join(path_monpa_package, 'model', 'monpa_model_8000.pt')
 is_initialized = False
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s - %(message)s', \
-                        datefmt = '%m/%d/%Y %H:%M:%S', \
-                        level = logging.INFO)
+                        datefmt = '%m/%d/%Y %H:%M:%S')#, \
+                        #level = logging.INFO)
 logger = logging.getLogger(__name__)
 
 def initialize():
@@ -196,9 +196,13 @@ def to_CoNLL_format(org_input, predicted_pos):
     if len(temp_word) > 0: # special case: no 'E-' in predicted_pos
         segmented_words.append(temp_word)
         temp_word = ''
-    assert len(segmented_words) == len(pos_tags), \
-           "lengths {} (words) and\n {} (pos tags) mismatch".format( \
-                 segmented_words, pos_tags)
+    try:
+         assert len(segmented_words) == len(pos_tags)
+    except:
+         print("Warning: lengths {} (words) and\n {} (pos tags) mismatch".format(segmented_words, pos_tags))
+    #assert len(segmented_words) == len(pos_tags), \
+    #       "lengths {} (words) and\n {} (pos tags) mismatch".format( \
+    #             segmented_words, pos_tags)
     for w, p in zip(segmented_words, pos_tags):
         conll_formatted.append((w, p))
     return conll_formatted, segmented_words, pos_tags
@@ -246,7 +250,9 @@ def load_userdict(pathtofile):
     # empty previous userdict
     _userdict = []
     for input_item in io.open(pathtofile, 'r', encoding="utf-8").read().split("\n"):
-        _userdict.append(input_item.split(" "))
+        if input_item: _userdict.append(input_item.split(" "))
+    _userdict.sort(key=lambda item: float(item[1]), reverse=True)
+
 
 def findall(p, s):
     ''' Yields all the positions of the pattern p in the string s

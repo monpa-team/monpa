@@ -1,4 +1,8 @@
-**monpa v0.3.1**
+**monpa v0.3.2**
+- fix issue 10, 11. related to load_userdict and logging.
+- Add "utils.short_sentence", "utils.cut_mp" and "utils.pseg_mp" method for shorting long sentence and implement multiprocessing to cut and pseg function.
+
+monpa v0.3.1
 - Add "cut_batch" and "pseg_batch" method to support batch segmentation by using GPU computing.
 
 monpa v0.3.0.0
@@ -40,3 +44,4 @@ monpa v.0.2.2
 
 monpa v0.2.1
 - adopt new training model
+
