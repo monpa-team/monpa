@@ -6,8 +6,9 @@ MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體�
 
 ## 公告
 ```diff
-- 更新版本 v0.3.1：新增運用 GPU 的批次斷詞功能 cut_batch 及 pseg_batch。
-- 前一版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
+- 本次更新版本 v0.3.2：解決 issue 10, 11 的建議，新增 short_sentence 斷句功能, cut_mp 及 cut_pseg 多執行程序功能等輔助程式。
+- 前一版本 v0.3.1：新增運用 GPU 的批次斷詞功能 cut_batch 及 pseg_batch。
+- 前版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
 - 公開釋出的 MONPA 僅供學術使用，請勿使用於商業用途。本團隊亦提供針對專業領域客製模型之服務，歡迎聯絡我們。
 ```
 
@@ -33,7 +34,7 @@ monpa 各版本的斷詞效率比較圖
 **注意**
 
 1. 建議以原文輸入 monpa 完成斷詞後，再視需求濾掉停留字（stopword）及標點符號（punctuation）。
-2. 每次輸入到 monpa 做斷詞的原文超過 140 字元的部分將被截斷丟失，建議先完成合適長度分句後再應用 monpa 斷詞。可參考 wiki [如何將長文切成短句再用 monpa 斷詞？](https://github.com/monpa-team/monpa/wiki/Example-1：將長句處理成短句再運用-monpa-完成分詞)）
+2. 每次輸入到 monpa 做斷詞的原文超過 200 字元的部分將被截斷丟失，建議先完成合適長度分句後再應用 monpa 斷詞。可參考 wiki [如何將長文切成短句再用 monpa 斷詞？](https://github.com/monpa-team/monpa/wiki/Example-1：將長句處理成短句再運用-monpa-完成分詞)）自行開發或是使用 v0.3.2 （含）之後版本的功能程式 short_sentence 來協助分句。
 3. 支援 python >= 3.6，不支援 python 2.x。
 
 ## 安裝 monpa 套件
@@ -118,7 +119,7 @@ for item in result_pseg:
 ('。', 'PERIODCATEGORY')
 ```
 
-### 載入自訂詞典 load_userdict function
+### load_userdict function
 
 如果需要自訂詞典，請依下列格式製作詞典文字檔，再使用此功能載入。簡單範例如下：
 
@@ -199,7 +200,7 @@ for item in result_cut_batch:
 monpa.use_gpu(True)
 ```
 
-從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` function，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of tuples 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` function 即可。簡單範例如下：
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```pseg_batch``` function，輸入須為 list 格式，單批次的輸入量需考量 GPU 的記憶體容量，回傳值亦是 list of turples 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` function 即可。簡單範例如下：
 
 ```python
 sentence_list = ["蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。", "蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。"]
@@ -216,6 +217,68 @@ for item in result_pseg_batch:
 [('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY')]
 ```
 
+## 輔助功能程式（ v0.3.2 開始提供）
+### utils.short_sentence function
+
+開始使用輔助功能程式前，請先載入 monpa 附屬之 utils 功能。
+
+```python
+from monpa import utils
+```
+
+基於 monpa 斷詞只處理 200 字元內的短句，所以建議先將長句分成多個短句再做斷詞才不會因過長語句而丟失斷詞。從 monpa v0.3.2 開始提供以 "。"，"！"，"？"，"，" 依序為參考斷點的 ```short_sentence``` function，輸入須為 string 格式，回傳值是 list 格式。該功能程式將先尋找 200 字元內最後一個 "。" 為斷點，若無，則改以 "！" 為斷點，以此類推。若 200 字元內皆無法找到預設 4 個標點符號為斷點來分句，就直接從 200 字元處分句。簡單範例如下：
+
+```python
+long_sentence = '''
+蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。
+'''
+sentence_list = utils.short_sentence(long_sentence)
+for item in sentence_list:
+    print(item)
+```
+
+輸出
+
+可以發現有 292 字元的 ```long_sentence``` 長句，經 ```utils.short_sentence``` 以 "。" 為斷點分成兩個短句。
+```python
+蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。
+蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。
+```
+
+### utils.cut_mp function
+
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```cut_batch``` function，但考量不是每台機器皆有 GPU，所以從 v0.3.2 開始提供多執行程序的功能程式來降低多量句子的斷詞耗時。輸入為 list 或是 list of list 格式，再依機器的 CPU 內核配備指定同時啟動的 worker 數量，回傳值是 list  或是 list of list 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```cut``` function 即可。簡單範例如下：
+
+```python
+sentence_list = ['蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。', '蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。']
+
+result_cut_mp = utils.cut_mp(sentence_list, 4) #本例是指定啟動 4 個 workers
+print(result_cut_mp)
+```
+
+輸出
+
+```python
+[['蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。'], ['蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。', '蔡英文', '總統', '今天', '受', '邀', '參加', '台北市', '政府', '所', '舉辦', '的', '陽明山', '馬拉松', '比賽', '。']]
+```
+
+### utils.pseg_mp function
+
+從 monpa v0.3.1 開始提供應用 GPU 運算能力的 ```cut_batch``` function，但考量不是每台機器皆有 GPU，所以從 v0.3.2 開始提供多執行程序的功能程式來降低多量句子的斷詞耗時。輸入為 list 或是 list of list 格式，再依機器的 CPU 內核配備指定同時啟動的 worker 數量，回傳值是 list  或是 list of list 格式。初次啟動需耗費較多時間，建議若非大量斷詞，可使用 ```pseg``` function 即可。簡單範例如下：
+
+```python
+sentence_list = ['蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。', '蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。蔡英文總統今天受邀參加台北市政府所舉辦的陽明山馬拉松比賽。']
+
+result_pseg_mp = utils.pseg_mp(sentence_list, 4) #本例是指定啟動 4 個 workers
+print(result_pseg_mp)
+```
+
+輸出
+
+```python
+[[('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Na'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Na'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Nc'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受邀', 'VJ'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Nc'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Na'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY')], [('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'P'), ('邀', 'VF'), ('參加', 'VC'), ('台北市政府', 'ORG'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Na'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY'), ('蔡英文', 'PER'), ('總統', 'Na'), ('今天', 'Nd'), ('受', 'VJ'), ('邀', 'VF'), ('參加', 'VC'), ('台北市', 'LOC'), ('政府', 'Nc'), ('所', 'D'), ('舉辦', 'VC'), ('的', 'DE'), ('陽明山', 'LOC'), ('馬拉松', 'Na'), ('比賽', 'Na'), ('。', 'PERIODCATEGORY')]]
+```
+
 ## 捐款
 
 我們需要您的支持來延續開發自然語言的基礎設施程式，懇請捐款[臺北醫學大學自然語言處理實驗室『人工智慧卓越創新計畫』。](http://nlp.tmu.edu.tw/Donate/index.html)
@@ -224,7 +287,7 @@ for item in result_pseg_batch:
 
 This project is inspired by our paper [MONPA: Multi-objective Named-entity and Part-of-speech Annotator for Chinese using Recurrent Neural Network](https://www.aclweb.org/anthology/papers/I/I17/I17-2014/) in which more information about the model detail can be found. 
 
-For your reference, although we list the paper here, it does NOT mean we use the exact same corpora when training the released model. The current MONPA is a new development by adopating the (AL)BERT model and a new paper will be published later. In the meantime, we list the original paper about the core ideas of MONPA for citation purposes.
+For your reference, although we list the paper here, it does NOT mean we use the exact same corpora when training the released model. The current MONPA is a new development by adopting the (AL)BERT model and a new paper will be published later. In the meantime, we list the original paper about the core ideas of MONPA for citation purposes.
 
 ##### Abstract
 
