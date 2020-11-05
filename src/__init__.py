@@ -250,7 +250,10 @@ def load_userdict(pathtofile):
     # empty previous userdict
     _userdict = []
     for input_item in io.open(pathtofile, 'r', encoding="utf-8").read().split("\n"):
-        if input_item: _userdict.append(input_item.split(" "))
+        if input_item:
+            items = input_item.split(" ")
+            items = " ".join(items[:len(items) - 2]), items[-2], items[-1]
+            _userdict.append(items)
     _userdict.sort(key=lambda item: float(item[1]), reverse=True)
 
 
