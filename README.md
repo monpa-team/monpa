@@ -1,6 +1,6 @@
 # 罔拍 MONPA: Multi-Objective NER POS Annotator
 
-MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體辨識的多任務模型。初期只有網站示範版本（<http://nlp.tmu.edu.tw:8080/chunk>），本計劃是將 monpa 包裝成可以 pip install 的 python package (最新版本 v0.3.2)。
+MONPA 罔拍是一個提供正體中文斷詞、[詞性標註](https://github.com/monpa-team/monpa/wiki/POS-and-NER-Tagging)以及命名實體辨識的多任務模型。初期只有網站示範版本（<http://nlp.tmu.edu.tw:8080/chunk>），本計劃是將 monpa 包裝成可以 pip install 的 python package (最新版本 v0.3.2)。
 
 最新版的 monpa model 是使用 pytorch 1.x 框架訓練出來的模型，所以在使用本版本前，請先安裝 torch 1.* 以上版本才能正常使用 monpa 套件。
 
