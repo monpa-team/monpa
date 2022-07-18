@@ -25,7 +25,7 @@ from .configuration_albert import AlbertConfig
 from .modeling_albert import AlbertForMONPA
 from .tokenization import FullTokenizer, convert_to_unicode
 
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 
 print("+---------------------------------------------------------------------+")
 print("  Welcome to MONPA: Multi-Objective NER POS Annotator for Chinese")

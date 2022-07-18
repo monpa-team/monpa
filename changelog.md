@@ -1,4 +1,7 @@
-**monpa v0.3.2**
+**monpa v0.3.3**
+- Upgrade torch API w.r.t. `where`
+
+monpa v0.3.2
 - fix issue 10, 11. related to load_userdict and logging.
 - Add "utils.short_sentence", "utils.cut_mp" and "utils.pseg_mp" method for shorting long sentence and implement multiprocessing to cut and pseg function.
 
