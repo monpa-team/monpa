@@ -626,11 +626,11 @@ class AlbertForMONPA(AlbertPreTrainedModel):
         # outputs = (logits,) + outputs[2:]  # add hidden states and attention if they are here
         if labels is None:
             # add hidden states and attention if they are here
-            return (self.crf_layer.decode(logits, attention_mask.byte()),) + outputs[2:]
+            return (self.crf_layer.decode(logits, attention_mask.bool()),) + outputs[2:]
 
         if labels is not None:
             loss_fct = nn.CrossEntropyLoss(ignore_index=0)
-            gold_score = self.crf_layer(logits, labels, attention_mask.byte(), reduction="token_mean")
+            gold_score = self.crf_layer(logits, labels, attention_mask.bool(), reduction="token_mean")
             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             total_loss = loss + -1e-2 * gold_score
 
