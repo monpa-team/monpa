@@ -6,9 +6,10 @@ MONPA 罔拍是一個提供正體中文斷詞、詞性標註以及命名實體�
 
 ## 公告
 ```diff
-- 本次更新版本 v0.3.2：解決 issue 10, 11 的建議，新增 short_sentence 斷句功能, cut_mp 及 cut_pseg 多執行程序功能等輔助程式。
-- 前一版本 v0.3.1：新增運用 GPU 的批次斷詞功能 cut_batch 及 pseg_batch。
-- 前版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
+- 本次更新版本 v0.3.3：#16 升級 torch API 以解決警告訊息
+- 更新版本 v0.3.2：解決 issue 10, 11 的建議，新增 short_sentence 斷句功能, cut_mp 及 cut_pseg 多執行程序功能等輔助程式。
+- 更新版本 v0.3.1：新增運用 GPU 的批次斷詞功能 cut_batch 及 pseg_batch。
+- 版本 v0.3.0：更小，更快，依然準確。完成 pip install 後不需要再另行下載模型檔。
 - 公開釋出的 MONPA 僅供學術使用，請勿使用於商業用途。本團隊亦提供針對專業領域客製模型之服務，歡迎聯絡我們。
 ```
 
